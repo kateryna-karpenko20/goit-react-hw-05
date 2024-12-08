@@ -1,7 +1,37 @@
-import { Link, Outlet } from 'react-router-dom';
+import { useParams, Link, Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { fetchMovieDetails } from '../../api/api';
+import MovieCast from '../../components/MovieCast/MovieCast';
+import MovieReviews from '../../components/MovieReviews/MovieReviews';
 import css from './MovieDetailsPage.module.css';
 
-const MovieDetailsPage = ({ movie }) => {
+const MovieDetailsPage = () => {
+  const { movieId } = useParams();
+  const [movie, setMovie] = useState(null);
+  const [error, setError] = useState(null);
+  const [showCast, setShowCast] = useState(false); // состояние для отображения кастов
+  const [showReviews, setShowReviews] = useState(false); // состояние для отображения отзывов
+
+  useEffect(() => {
+    const getMovieDetails = async () => {
+      try {
+        const movieData = await fetchMovieDetails(movieId);
+        setMovie(movieData);
+      } catch (err) {
+        setError('Failed to fetch movie details');
+      }
+    };
+
+    getMovieDetails();
+  }, [movieId]);
+
+  if (error) return <p>{error}</p>;
+  if (!movie) return <p>Loading...</p>;
+
+  // Функции для переключения состояния видимости
+  const toggleCast = () => setShowCast((prev) => !prev);
+  const toggleReviews = () => setShowReviews((prev) => !prev);
+
   return (
     <div className={css.container}>
       <button className={css.goBack}>
@@ -22,14 +52,40 @@ const MovieDetailsPage = ({ movie }) => {
           <p>{movie.genres.map(genre => genre.name).join(', ')}</p>
         </div>
       </div>
+
+      {/* Кнопки для переключения отображения Cast и Reviews */}
       <div className={css.additional}>
         <h4>Additional information</h4>
         <ul>
-          <li><Link to="cast" className={css.link}>Cast</Link></li>
-          <li><Link to="reviews" className={css.link}>Reviews</Link></li>
+          <li>
+            <button onClick={toggleCast} className={css.link}>
+              {showCast ? 'Hide Cast' : 'Show Cast'}
+            </button>
+          </li>
+          <li>
+            <button onClick={toggleReviews} className={css.link}>
+              {showReviews ? 'Hide Reviews' : 'Show Reviews'}
+            </button>
+          </li>
         </ul>
-        <Outlet />
       </div>
+
+      {/* Отображаем компоненты только если состояние true */}
+      {showCast && (
+        <div className={css.cast}>
+          <h4>Cast</h4>
+          <MovieCast movieId={movieId} />
+        </div>
+      )}
+
+      {showReviews && (
+        <div className={css.reviews}>
+          <h4>Reviews</h4>
+          <MovieReviews movieId={movieId} />
+        </div>
+      )}
+
+      <Outlet />
     </div>
   );
 };

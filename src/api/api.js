@@ -1,38 +1,44 @@
-const API_KEY = 'your_api_key_here';
+const API_KEY = '59d30dce8ffe78925936b0920166bc43';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-export const fetchTrendingMovies = async () => {
-  const response = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch trending movies');
+const fetchData = async (url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error('There was an issue fetching the data');
   }
-  const data = await response.json();
+};
+
+export const fetchTrendingMovies = async () => {
+  const url = `${BASE_URL}/trending/movie/day?api_key=${API_KEY}`;
+  const data = await fetchData(url);
   return data.results;
 };
 
 export const fetchMovieDetails = async (movieId) => {
-  const response = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch movie details');
-  }
-  const data = await response.json();
-  return data;
+  const url = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`;
+  return await fetchData(url);
 };
 
 export const fetchMovieCast = async (movieId) => {
-  const response = await fetch(`${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch movie cast');
-  }
-  const data = await response.json();
+  const url = `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}`;
+  const data = await fetchData(url);
   return data.cast;
 };
 
 export const fetchMovieReviews = async (movieId) => {
-  const response = await fetch(`${BASE_URL}/movie/${movieId}/reviews?api_key=${API_KEY}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch movie reviews');
-  }
-  const data = await response.json();
+  const url = `${BASE_URL}/movie/${movieId}/reviews?api_key=${API_KEY}`;
+  const data = await fetchData(url);
+  return data.results;
+};
+
+export const fetchSearchMovies = async (searchTerm) => {
+  const url = `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(searchTerm)}`;
+  const data = await fetchData(url);
   return data.results;
 };
