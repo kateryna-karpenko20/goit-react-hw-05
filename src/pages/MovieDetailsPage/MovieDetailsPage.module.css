@@ -1,0 +1,42 @@
+.container {
+  padding: 20px;
+}
+
+.goBack {
+  margin-bottom: 20px;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: none;
+}
+
+.details {
+  display: flex;
+  gap: 20px;
+}
+
+.poster {
+  width: 300px;
+  border-radius: 5px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.score {
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-weight: bold;
+}
+
+.additional {
+  margin-top: 30px;
+}
+
+.link {
+  text-decoration: none;
+  color: blue;
+}
