@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchMovieReviews } from '../../api/api';
+import { fetchMovieReviews } from '../../service/api';
 import css from './MovieReviews.module.css';
 
 const MovieReviews = ({ movieId }) => {

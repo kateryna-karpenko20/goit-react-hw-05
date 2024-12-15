@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchMovieCast } from '../../api/api';
+import { fetchMovieCast } from '../../service/api';
 import css from './MovieCast.module.css';
 
 const MovieCast = ({ movieId }) => {

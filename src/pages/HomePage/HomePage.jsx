@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchTrendingMovies } from '../../api/api';
+import { fetchTrendingMovies } from '../../service/api';
 import MovieList from '../../components/MovieList/MovieList';
 import css from './HomePage.module.css';
 

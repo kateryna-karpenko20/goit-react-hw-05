@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { fetchSearchMovies } from '../../api/api';
+import { fetchSearchMovies } from '../../service/api';
 import css from './MoviesPage.module.css';
 
 const MoviesPage = () => {
