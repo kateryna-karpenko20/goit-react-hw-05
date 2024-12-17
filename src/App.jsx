@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import Navigation from './components/Navigation/Navigation';
 import MovieCast from './components/MovieCast/MovieCast';
 import MovieReviews from './components/MovieReviews/MovieReviews';
+import { Outlet } from 'react-router-dom';
 
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
 const MoviesPage = lazy(() => import('./pages/MoviesPage/MoviesPage'));
@@ -18,13 +19,8 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/movies" element={<MoviesPage />} />
           <Route path="/movies/:movieId" element={<MovieDetailsPage />}>
-  <Route path="cast" element={<MovieCast />} />
-              <Route
-              path="reviews"
-              element={<MovieReviews />}
-              // Додаємо лог для перевірки movieId
-              onEnter={({ params }) => console.log('MovieId for reviews:', params.movieId)}
-            />
+            <Route path="cast" element={<MovieCast />} />
+            <Route path="reviews" element={<MovieReviews />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
