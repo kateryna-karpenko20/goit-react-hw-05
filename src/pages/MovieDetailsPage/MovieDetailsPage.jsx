@@ -1,16 +1,12 @@
-import { useParams, Link, Outlet } from 'react-router-dom';
+import { useParams, Link, Outlet, NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchMovieDetails } from '../../service/api';
-import MovieCast from '../../components/MovieCast/MovieCast';
-import MovieReviews from '../../components/MovieReviews/MovieReviews';
 import css from './MovieDetailsPage.module.css';
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [error, setError] = useState(null);
-  const [showCast, setShowCast] = useState(false); // состояние для отображения кастов
-  const [showReviews, setShowReviews] = useState(false); // состояние для отображения отзывов
 
   useEffect(() => {
     const getMovieDetails = async () => {
@@ -27,10 +23,6 @@ const MovieDetailsPage = () => {
 
   if (error) return <p>{error}</p>;
   if (!movie) return <p>Loading...</p>;
-
-  // Функции для переключения состояния видимости
-  const toggleCast = () => setShowCast((prev) => !prev);
-  const toggleReviews = () => setShowReviews((prev) => !prev);
 
   return (
     <div className={css.container}>
@@ -53,41 +45,25 @@ const MovieDetailsPage = () => {
         </div>
       </div>
 
-      {/* Кнопки для переключения отображения Cast и Reviews */}
       <div className={css.additional}>
         <h4>Additional information</h4>
         <ul>
           <li>
-            <button onClick={toggleCast} className={css.link}>
-              {showCast ? 'Hide Cast' : 'Show Cast'}
-            </button>
+            <NavLink to="cast" className={({ isActive }) => (isActive ? css.activeLink : css.link)}>
+              Cast
+            </NavLink>
           </li>
           <li>
-            <button onClick={toggleReviews} className={css.link}>
-              {showReviews ? 'Hide Reviews' : 'Show Reviews'}
-            </button>
+            <NavLink to="reviews" className={({ isActive }) => (isActive ? css.activeLink : css.link)}>
+              Reviews
+            </NavLink>
           </li>
         </ul>
       </div>
-
-      {/* Отображаем компоненты только если состояние true */}
-      {showCast && (
-        <div className={css.cast}>
-          <h4>Cast</h4>
-          <MovieCast movieId={movieId} />
-        </div>
-      )}
-
-      {showReviews && (
-        <div className={css.reviews}>
-          <h4>Reviews</h4>
-          <MovieReviews movieId={movieId} />
-        </div>
-      )}
-
       <Outlet />
     </div>
   );
 };
 
 export default MovieDetailsPage;
+

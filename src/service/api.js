@@ -8,7 +8,7 @@ const fetchWithToken = async (url) => {
   try {
     const response = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`,
+        Authorization: `Bearer ${ACCESS_TOKEN}`,  // використовується ваш токен
         'Content-Type': 'application/json',
       },
     });
@@ -19,7 +19,7 @@ const fetchWithToken = async (url) => {
 
     return await response.json();
   } catch (error) {
-    console.error(`Fetch error for URL: ${url}`, error);
+    console.error('Fetch error:', error);
     throw new Error('There was an issue fetching the data');
   }
 };
@@ -39,17 +39,41 @@ export const fetchMovieDetails = async (movieId) => {
 
 // Запрос на получение актеров фильма
 export const fetchMovieCast = async (movieId) => {
+  if (!movieId) {
+    throw new Error('movieId is required');
+  }
+
   const url = `${BASE_URL}/movie/${movieId}/credits`;
-  const data = await fetchWithToken(url);
-  return data.cast;
+  console.log('Fetching cast for movieId:', movieId);  // Лог для перевірки
+  try {
+    const data = await fetchWithToken(url);
+    return data.cast || [];
+  } catch (error) {
+    console.error('Error fetching movie cast:', error);
+    throw new Error('Failed to fetch cast');
+  }
 };
 
+
 // Запрос на получение отзывов фильма
+
+// Додаємо функцію для отримання відгуків
 export const fetchMovieReviews = async (movieId) => {
+  if (!movieId) {
+    throw new Error('Movie ID is required');
+  }
+
   const url = `${BASE_URL}/movie/${movieId}/reviews`;
-  const data = await fetchWithToken(url);
-  return data.results;
+  try {
+    const data = await fetchWithToken(url);
+    return data.results || [];
+  } catch (error) {
+    console.error('Error fetching movie reviews:', error);
+    throw new Error('Failed to fetch reviews');
+  }
 };
+
+
 
 // Запрос на поиск фильмов
 export const fetchSearchMovies = async (searchTerm) => {

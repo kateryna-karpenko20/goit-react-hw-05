@@ -1,26 +1,36 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';  // Для отримання movieId з параметрів URL
 import { fetchMovieCast } from '../../service/api';
 import css from './MovieCast.module.css';
 
-const MovieCast = ({ movieId }) => {
+const MovieCast = () => {
+  const { movieId } = useParams();  // Отримуємо movieId
   const [cast, setCast] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const getCast = async () => {
+      if (!movieId) {
+        setError('Movie ID is not available');
+        setLoading(false);
+        return;
+      }
+      console.log('Fetching cast for movieId:', movieId);  // Лог для перевірки movieId
       try {
         const castData = await fetchMovieCast(movieId);
+        console.log('Fetched cast data:', castData);  // Лог для перевірки отриманих даних касту
         setCast(castData);
         setLoading(false);
       } catch (err) {
-        setError('Failed to load cast information');
+        console.error('Error fetching cast:', err);  // Лог помилки
+        setError('Failed to load cast');
         setLoading(false);
       }
     };
 
     getCast();
-  }, [movieId]);
+  }, [movieId]);  // Додаємо movieId як залежність, щоб викликати fetch при його зміні
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -30,21 +40,17 @@ const MovieCast = ({ movieId }) => {
       {cast.length > 0 ? (
         cast.map((actor) => (
           <li key={actor.id} className={css.castItem}>
-            {actor.profile_path ? (
-              <img
-                src={`https://image.tmdb.org/t/p/w200/${actor.profile_path}`}
-                alt={actor.name}
-                className={css.castImage}
-              />
-            ) : (
-              <div className={css.noImage}>No Image</div>
-            )}
+            <img
+              src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
+              alt={actor.name}
+              className={css.actorImage}
+            />
             <p>{actor.name}</p>
-            <p>Character: {actor.character}</p>
+            <p>{actor.character}</p>
           </li>
         ))
       ) : (
-        <p>No cast information available.</p>
+        <p>No cast available.</p>
       )}
     </ul>
   );
