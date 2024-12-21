@@ -32,20 +32,22 @@ const MovieReviews = () => {
     getReviews();
   }, [movieId]);  // Додаємо movieId як залежність, щоб викликати fetch при його зміні
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading reviews...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div className={css.reviewsContainer}>
       {reviews.length > 0 ? (
-        reviews.map((review) => (
-          <div key={review.id} className={css.review}>
-            <h3>{review.author}</h3>
-            <p>{review.content}</p>
-          </div>
-        ))
+        <ul className={css.reviewList}>
+          {reviews.map((review) => (
+            <li key={review.id} className={css.reviewItem}>
+              <h3>{review.author}</h3>
+              <p>{review.content}</p>
+            </li>
+          ))}
+        </ul>
       ) : (
-        <p>No reviews available.</p>
+        <p>No reviews available for this movie.</p>
       )}
     </div>
   );
